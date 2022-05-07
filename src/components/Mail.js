@@ -17,9 +17,12 @@ import {
 } from "@material-ui/icons";
 
 import "../css/mail.css";
+import { useSelector } from "react-redux";
+import { selectOpenMail } from "../features/mailSlice";
 
 const Mail = () => {
   const navigate = useNavigate();
+  const selectedMail = useSelector(selectOpenMail);
 
   return (
     <div className="mail">
@@ -78,13 +81,13 @@ const Mail = () => {
       </div>
       <div className="mail__body">
         <div className="mail__bodyHeader">
-          <h2>subject</h2>
+          <h2>{selectedMail?.subject}</h2>
           <LabelImportant className="mail__important" />
-          <p>Title</p>
-          <p>10pm</p>
+          <p>{selectedMail?.title}</p>
+          <p className="mail__time">{selectedMail?.time}</p>
         </div>
         <div className="mail__message">
-          <p>This is a message</p>
+          <p>{selectedMail?.description}</p>
         </div>
       </div>
     </div>
