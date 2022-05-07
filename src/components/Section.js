@@ -5,7 +5,7 @@ const Section = ({ Icon, title, color, selected }) => {
   return (
     <div
       className={`section ${selected && "section--selected"}`}
-      styles={{
+      style={{
         borderBottom: `3px solid ${color}`,
         color: `${selected && color}`,
       }}
