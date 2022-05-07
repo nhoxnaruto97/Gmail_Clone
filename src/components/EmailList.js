@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Checkbox, IconButton } from "@material-ui/core";
 import {
   ArrowDropDown,
@@ -15,8 +15,25 @@ import {
 import "../css/emailList.css";
 import Section from "./Section";
 import EmailRow from "./EmailRow";
+import { db } from "../firebase";
+import { collection, onSnapshot, orderBy } from "firebase/firestore";
 
 const EmailList = () => {
+  const [emails, setemails] = useState([]);
+
+  useEffect(() => {
+    onSnapshot(
+      collection(db, "emails"),
+      orderBy("timeStamp", "desc"),
+      (snapshot) =>
+        setemails(
+          snapshot.docs.map((doc) => ({
+            id: doc.id,
+            data: doc.data(),
+          }))
+        )
+    );
+  }, []);
   return (
     <div className="emailList">
       <div className="emailList__settings">
@@ -54,12 +71,16 @@ const EmailList = () => {
       </div>
 
       <div className="emailList__list">
-        <EmailRow
-          title="Twitch"
-          subject="Hey streamer!!!"
-          description="This is a test"
-          time="10pm"
-        />
+        {emails.map(({ id, data: { to, subject, message, timeStamp } }) => (
+          <EmailRow
+            id={id}
+            key={id}
+            title={to}
+            subject={subject}
+            description={message}
+            time={new Date(timeStamp?.seconds * 1000).toUTCString()}
+          />
+        ))}
       </div>
     </div>
   );
